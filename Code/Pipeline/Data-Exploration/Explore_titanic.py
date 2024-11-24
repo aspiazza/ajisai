@@ -143,7 +143,8 @@ def num_correlation_map_graph():
 
 # Correlation between numerical features
 def cat_correlation_map_graph():
-    cleaned_titanic_csv = df.select_dtypes(['object'])
+    cleaned_titanic_csv = df.drop(['Name', 'PassengerId'], axis=1)
+    cleaned_titanic_csv = cleaned_titanic_csv.select_dtypes(['object'])
     column_headers = cleaned_titanic_csv.columns
     categorical_correlation_dataframe = pd.DataFrame(columns=[column_headers],
                                                      index=[column_headers])  # Create dataframe
@@ -152,13 +153,10 @@ def cat_correlation_map_graph():
         for second_categorical_feature in column_headers:
             confusion_matrix = pd.crosstab(cleaned_titanic_csv[first_categorical_feature],
                                            cleaned_titanic_csv[second_categorical_feature])
-            print(confusion_matrix.values)
-            exit()
 
             categorical_correlation_dataframe.loc[second_categorical_feature,
                                                   first_categorical_feature] = cramers_v(confusion_matrix.values)
-    print(categorical_correlation_dataframe.head())
-    exit()
+
     categorical_correlation_heatmap_figure = go.Figure(
         go.Heatmap(z=categorical_correlation_dataframe, x=column_headers, y=column_headers))
     categorical_correlation_heatmap_figure.update_layout(title_text='Categorical Feature Correlation Heatmap')
@@ -166,5 +164,38 @@ def cat_correlation_map_graph():
     return categorical_correlation_heatmap_figure
 
 
-figures_to_html(figs=[feature_count_graph(), num_correlation_map_graph(), cat_correlation_map_graph()],
-                filename=metric_graphs_dir)
+# Correlation between numerical and categorical features
+def cat_num_correlation_map_graph():
+    cleaned_titanic_csv = df.drop(['Name', 'PassengerId'], axis=1)
+    column_headers = cleaned_titanic_csv.columns
+    categorical_titanic_csv = cleaned_titanic_csv.select_dtypes(['object'])
+    numerical_titanic_csv = cleaned_titanic_csv.select_dtypes(['number'])
+    categorical_columns = categorical_titanic_csv.columns
+    numerical_columns = numerical_titanic_csv.columns
+    correlation_z_list = []
+
+    cat_num_correlation_dataframe = pd.DataFrame(columns=[column_headers],
+                                                 index=[column_headers])  # Create dataframe
+
+    for first_feature in column_headers:
+        for second_feature in column_headers:
+            confusion_matrix = pd.crosstab(cleaned_titanic_csv[first_feature],
+                                           cleaned_titanic_csv[second_feature])
+
+            cat_num_correlation_dataframe.loc[second_feature, first_feature] = correlation_ratio(
+                cleaned_titanic_csv[first_feature], cleaned_titanic_csv[second_feature])
+
+    # for categorical_feature in categorical_columns:
+    #     for numerical_feature in numerical_columns:
+    #         correlation_z_list.append(correlation_ratio(categorical_titanic_csv[categorical_feature],
+    #                                                     numerical_titanic_csv[numerical_feature]))
+
+    correlation_ratio_heatmap_figure = go.Figure(
+        go.Heatmap(z=correlation_z_list, x=categorical_columns, y=numerical_columns))
+    correlation_ratio_heatmap_figure.update_layout(title_text='Numeric x Categorical Feature Correlation Heatmap')
+
+    return correlation_ratio_heatmap_figure
+
+
+figures_to_html(figs=[feature_count_graph(), num_correlation_map_graph(), cat_correlation_map_graph(),
+                      cat_num_correlation_map_graph()], filename=metric_graphs_dir)

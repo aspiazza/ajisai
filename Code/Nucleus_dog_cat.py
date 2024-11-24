@@ -108,13 +108,13 @@ if __name__ == '__main__':
                                  saved_weights_dir='D:\\Saved-Models\\Dog-Cat-Models')
     model_instance.preprocess()
     model_instance.model_init()
-    # model_instance.grid_search()
+    model_instance.grid_search()
     model_instance.training(callback_bool=True)
-    # model_instance.graphing(
-    #     csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\Last_Generation_dog_cat_training_metrics.csv')
-    # model_instance.evaluate(saved_weights_dir='D:\\Saved-Models\\Dog-Cat-Models\\Last_Generation_dog_cat_optuna.h5',
-    #                         callback_bool=True)
-    # model_instance.evaluate_graphing(
-    #     csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\Last_Generation_dog_cat_evaluation_metrics.csv')
-    # model_instance.model_predict(saved_weights_dir='D:\\Saved-Models\\Dog-Cat-Models\\Last_Generation_dog_cat.h5',
-    #                              prediction_data='D:\\Data-Warehouse\\Dog-Cat-Data\\training_dir\\Predict')
+    model_instance.graphing(
+        csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\Last_Generation_dog_cat_training_metrics.csv')
+    model_instance.evaluate(saved_weights_dir='D:\\Saved-Models\\Dog-Cat-Models\\Last_Generation_dog_cat_optuna.h5',
+                            callback_bool=True)
+    model_instance.evaluate_graphing(
+        csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\Last_Generation_dog_cat_evaluation_metrics.csv')
+    model_instance.model_predict(saved_weights_dir='D:\\Saved-Models\\Dog-Cat-Models\\Last_Generation_dog_cat.h5',
+                                 prediction_data='D:\\Data-Warehouse\\Dog-Cat-Data\\training_dir\\Predict')

@@ -147,7 +147,7 @@ def categorical_correlation_map_graph():
                                                diamonds_csv[second_categorical_feature])
 
                 categorical_correlation_dataframe.loc[second_categorical_feature,
-                                                      first_categorical_feature] = cramers_v(confusion_matrix.values)
+                first_categorical_feature] = cramers_v(confusion_matrix.values)
 
         return categorical_correlation_dataframe
 
